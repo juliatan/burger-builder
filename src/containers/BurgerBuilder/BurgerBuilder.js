@@ -22,6 +22,7 @@ class BurgerBuilder extends Component {
     },
     totalPrice: 4,
     purchasable: false,
+    purchasing: false,
   };
 
   addIngredientHandler = (type) => {
@@ -70,6 +71,12 @@ class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngredients);
   };
 
+  // note this does need arrow function because it's being passed as a prop and relies on a button click in the DOM
+  purchaseHandler = () => {
+    this.setState({ purchasing: true });
+  };
+
+  // note this doesn't need arrow function as it's not being called in the DOM
   updatePurchaseState(ingredients) {
     const total = Object.keys(ingredients)
       .map((ingredientKey) => {
@@ -96,7 +103,7 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
-        <Modal>
+        <Modal show={this.state.purchasing}>
           <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
@@ -106,6 +113,7 @@ class BurgerBuilder extends Component {
           disabledInfo={disabledInfo}
           price={this.state.totalPrice}
           disabled={!this.state.purchasable}
+          ordered={this.purchaseHandler}
         />
       </Aux>
     );
