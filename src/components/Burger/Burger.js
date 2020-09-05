@@ -8,6 +8,7 @@ const burger = (props) => {
     .map((ingredientKey) => {
       return [...Array(props.ingredients[ingredientKey])].map((_, index) => {
         return (
+          // eslint-disable-next-line react/no-array-index-key
           <BurgerIngredient type={ingredientKey} key={ingredientKey + index} />
         );
       });
