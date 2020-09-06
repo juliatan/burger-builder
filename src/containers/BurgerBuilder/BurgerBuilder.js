@@ -80,6 +80,11 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: false });
   };
 
+  purchaseContinueHandler = () => {
+    // eslint-disable-next-line no-alert
+    alert('continue with purchase');
+  };
+
   // note this doesn't need arrow function as it's not being called in the DOM
   updatePurchaseState(ingredients) {
     const total = Object.keys(ingredients)
@@ -111,7 +116,11 @@ class BurgerBuilder extends Component {
           show={this.state.purchasing}
           modalClosed={this.purchaseCancelHandler}
         >
-          <OrderSummary ingredients={this.state.ingredients} />
+          <OrderSummary
+            ingredients={this.state.ingredients}
+            cancelled={this.purchaseCancelHandler}
+            continued={this.purchaseContinueHandler}
+          />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
