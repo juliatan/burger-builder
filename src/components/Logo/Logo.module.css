@@ -1,7 +1,8 @@
 .Logo {
   background-color: white;
   padding: 8px;
-  height: 80%;
+  /* note: will make height responsive in the actual components where logo is used */
+  height: 100%;
   box-sizing: border-box;
   border-radius: 5px;
 }
