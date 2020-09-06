@@ -1,10 +1,10 @@
 import React from 'react';
 import classes from './Modal.module.css';
-import Aux from '../../../hoc/Aux/Aux';
 import Backdrop from '../Backdrop/Backdrop';
 
 const modal = (props) => (
-  <Aux>
+  // Instead of using Aux custom component, I'm trying a shorthand of React.Fragment
+  <>
     <div
       className={classes.Modal}
       style={{
@@ -15,7 +15,10 @@ const modal = (props) => (
       {props.children}
     </div>
     <Backdrop show={props.show} clicked={props.modalClosed} />
-  </Aux>
+  </>
 );
 
-export default modal;
+const showPropIsEqual = (prevModal, nextModal) =>
+  prevModal.show === nextModal.show;
+
+export default React.memo(modal, showPropIsEqual);
