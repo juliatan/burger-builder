@@ -18,7 +18,8 @@ const modal = (props) => (
   </>
 );
 
-const showPropIsEqual = (prevModal, nextModal) =>
-  prevModal.show === nextModal.show;
+const noChange = (prevModal, nextModal) =>
+  prevModal.show === nextModal.show &&
+  prevModal.children === nextModal.children; // included to show loading state
 
-export default React.memo(modal, showPropIsEqual);
+export default React.memo(modal, noChange);
