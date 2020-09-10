@@ -17,18 +17,24 @@ const withErrorHandler = (WrappedComponent, axios) => {
     // and use hooks (useEffect()).
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillMount() {
-      axios.interceptors.request.use((req) => {
+      // name these interceptors to allow us to eject when the component is unmounted
+      this.reqInterceptor = axios.interceptors.request.use((req) => {
         this.setState({ error: null });
         return req;
       });
 
-      axios.interceptors.response.use(
+      this.resInterceptor = axios.interceptors.response.use(
         (res) => res,
         (error) => {
           // same as this.setState({ error: error })
           this.setState({ error });
         },
       );
+    }
+
+    componentWillUnmount() {
+      axios.interceptors.request.eject(this.reqInterceptor);
+      axios.interceptors.response.eject(this.resInterceptor);
     }
 
     clearError = () => {
