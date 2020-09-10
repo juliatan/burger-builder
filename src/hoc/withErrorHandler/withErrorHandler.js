@@ -11,7 +11,12 @@ const withErrorHandler = (WrappedComponent, axios) => {
       error: null,
     };
 
-    componentDidMount() {
+    // Originally set up axios interceptors in componentDidMount but this is too late as it requires the
+    // child components in BurgerBuilder to be rendered first (which already tries to do the API call).
+    // componentWillMount works but will be deprecated soon. Would need to change to functional component
+    // and use hooks (useEffect()).
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
       axios.interceptors.request.use((req) => {
         this.setState({ error: null });
         return req;
