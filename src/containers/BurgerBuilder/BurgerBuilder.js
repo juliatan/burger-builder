@@ -100,39 +100,11 @@ class BurgerBuilder extends Component {
     // this.props.history.push('/checkout');
     this.props.history.push({
       pathname: '/checkout',
-      state: { ingredients: this.state.ingredients },
+      state: {
+        ingredients: this.state.ingredients,
+        totalPrice: this.state.totalPrice,
+      },
     });
-
-    // this.setState({ loading: true });
-    // const post = {
-    //   customer: {
-    //     address: {
-    //       street: '123 street',
-    //       city: 'London',
-    //       country: 'UK',
-    //     },
-    //     email: 'test@test.com',
-    //     name: 'Julia Gulia',
-    //   },
-    //   deliveryMethod: 'fastest',
-    //   ingredients: this.state.ingredients,
-    //   totalPrice: this.state.totalPrice, // in real app, would double check calc on server side
-    // };
-    // try {
-    //   const saveOrder = async () => {
-    //     await axios.post('/orders.json', post);
-    //   };
-    //   saveOrder();
-    //   this.setState({
-    //     loading: false,
-    //     purchasing: false,
-    //   });
-    // } catch (error) {
-    //   this.setState({
-    //     loading: false,
-    //     purchasing: false,
-    //   });
-    // }
   };
 
   // note this doesn't need arrow function as it's not being called in the DOM

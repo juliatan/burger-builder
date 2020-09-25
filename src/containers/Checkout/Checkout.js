@@ -6,11 +6,13 @@ import ContactData from './ContactData/ContactData';
 class Checkout extends Component {
   state = {
     ingredients: {},
+    totalPrice: 0,
   };
 
   componentDidMount() {
-    const { ingredients } = this.props.location.state;
-    this.setState({ ingredients });
+    // comes via BurgerBuilder where pushed route comes with a state object I setup
+    const { ingredients, totalPrice } = this.props.location.state;
+    this.setState({ ingredients, totalPrice });
   }
 
   checkoutCancelledHandler = () => {
@@ -32,7 +34,14 @@ class Checkout extends Component {
         <Route
           // eslint-disable-next-line prefer-template
           path={this.props.match.path + '/contact-data'}
-          component={ContactData}
+          // component={ContactData} replaced with render to pass in our own props, and the router props
+          render={(props) => (
+            <ContactData
+              ingredients={this.state.ingredients}
+              totalPrice={this.state.totalPrice}
+              {...props}
+            />
+          )}
         />
       </div>
     );
