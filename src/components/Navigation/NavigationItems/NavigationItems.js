@@ -4,11 +4,11 @@ import NavigationItem from './NavigationItem/NavigationItem';
 
 const navigationItems = () => (
   <ol className={classes.NavigationItems}>
-    {/* active prop is boolean so don't need to explicitly set to true */}
-    <NavigationItem link="/" active>
+    {/* need the exact property, so that we can pass it to NavLink and not render / as always active */}
+    <NavigationItem link="/" exact>
       Burger Builder
     </NavigationItem>
-    <NavigationItem link="/">Checkout</NavigationItem>
+    <NavigationItem link="/orders">Orders</NavigationItem>
   </ol>
 );
 

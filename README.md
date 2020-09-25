@@ -1,12 +1,12 @@
 # Burger Builder
 
-[WIP] This fun project was developed primarily for me to practice React, React routing and Redux. It allows users to dynamically customise a burger and place and order. This order to saved to a database and can be retrieved on-demand.
+[WIP] This fun project was developed primarily for me to practice React, React routing, Redux and test writing. It allows users to dynamically customise a burger and place an order. This order is saved to a Firebase database and can be retrieved on-demand.
 
 ## Requirements
 
 - Some of the libraries imported and used:
   - `react`
-  - `react-router` - WIP
+  - `react-router-dom`
   - `react-redux` - WIP
   - `axios`
   - `eslint`
@@ -16,7 +16,8 @@
 
 - Navbar and side drawer for navigation.
 - Saves orders to Firebase database via Axios. Orders can subsequently be retrieved.
-- Routing with React Router. - WIP
+- Routing within SPA with React Router.
+- Axios interceptors to handle errors on app-wide basis via a higher order component (withErrorHandler).
 - State management with Redux. - WIP.
 - WIP
 
@@ -33,4 +34,5 @@
 ## To do
 
 - Write tests
-- Practice Redux and React Router
+- Implement Redux
+- Complete README
