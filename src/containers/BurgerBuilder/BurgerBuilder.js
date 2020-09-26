@@ -21,7 +21,8 @@ class BurgerBuilder extends Component {
   state = {
     // ingredients: null,
     // totalPrice: 4,
-    purchasable: false,
+    // purchasable: false,
+    // left with just the states that are for UI purposes only
     purchasing: false,
     loading: false,
     error: false,
@@ -119,9 +120,11 @@ class BurgerBuilder extends Component {
         return sum + el;
       }, 0);
 
-    this.setState({
-      purchasable: total > 0,
-    });
+    return total > 0;
+
+    // this.setState({
+    //   purchasable: total > 0,
+    // });
   }
 
   render() {
@@ -149,7 +152,9 @@ class BurgerBuilder extends Component {
             ingredientRemoved={this.props.onIngredientRemoved}
             disabledInfo={disabledInfo}
             price={this.props.price}
-            disabled={!this.state.purchasable}
+            // want to execute the check immedately on every change hence pass in argument
+            disabled={!this.updatePurchaseState(this.props.ings)}
+            // disabled={!this.state.purchasable}
             ordered={this.purchaseHandler}
           />
         </Aux>
