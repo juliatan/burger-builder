@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Aux from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -7,20 +8,19 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import { connect } from 'react-redux';
 import * as actionTypes from '../../store/actions';
 
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  bacon: 1.0,
-  cheese: 0.4,
-  meat: 1.2,
-};
+// const INGREDIENT_PRICES = {
+//   salad: 0.5,
+//   bacon: 1.0,
+//   cheese: 0.4,
+//   meat: 1.2,
+// };
 
 class BurgerBuilder extends Component {
   state = {
     // ingredients: null,
-    totalPrice: 4,
+    // totalPrice: 4,
     purchasable: false,
     purchasing: false,
     loading: false,
@@ -43,51 +43,51 @@ class BurgerBuilder extends Component {
     }
   };
 
-  addIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    const updatedCount = oldCount + 1;
-    const updatedIngredients = {
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      ...this.state.ingredients,
-    };
-    updatedIngredients[type] = updatedCount;
+  // addIngredientHandler = (type) => {
+  //   const oldCount = this.state.ingredients[type];
+  //   const updatedCount = oldCount + 1;
+  //   const updatedIngredients = {
+  //     // eslint-disable-next-line react/no-access-state-in-setstate
+  //     ...this.state.ingredients,
+  //   };
+  //   updatedIngredients[type] = updatedCount;
 
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const updatedPrice = oldPrice + priceAddition;
+  //   const priceAddition = INGREDIENT_PRICES[type];
+  //   const oldPrice = this.state.totalPrice;
+  //   const updatedPrice = oldPrice + priceAddition;
 
-    this.setState({
-      ingredients: updatedIngredients,
-      totalPrice: updatedPrice,
-    });
+  //   this.setState({
+  //     ingredients: updatedIngredients,
+  //     totalPrice: updatedPrice,
+  //   });
 
-    this.updatePurchaseState(updatedIngredients);
-  };
+  //   this.updatePurchaseState(updatedIngredients);
+  // };
 
-  removeIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    if (oldCount <= 0) {
-      return;
-    }
+  // removeIngredientHandler = (type) => {
+  //   const oldCount = this.state.ingredients[type];
+  //   if (oldCount <= 0) {
+  //     return;
+  //   }
 
-    const updatedCount = oldCount - 1;
-    const updatedIngredients = {
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      ...this.state.ingredients,
-    };
-    updatedIngredients[type] = updatedCount;
+  //   const updatedCount = oldCount - 1;
+  //   const updatedIngredients = {
+  //     // eslint-disable-next-line react/no-access-state-in-setstate
+  //     ...this.state.ingredients,
+  //   };
+  //   updatedIngredients[type] = updatedCount;
 
-    const priceDeduction = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const updatedPrice = oldPrice - priceDeduction;
+  //   const priceDeduction = INGREDIENT_PRICES[type];
+  //   const oldPrice = this.state.totalPrice;
+  //   const updatedPrice = oldPrice - priceDeduction;
 
-    this.setState({
-      ingredients: updatedIngredients,
-      totalPrice: updatedPrice,
-    });
+  //   this.setState({
+  //     ingredients: updatedIngredients,
+  //     totalPrice: updatedPrice,
+  //   });
 
-    this.updatePurchaseState(updatedIngredients);
-  };
+  //   this.updatePurchaseState(updatedIngredients);
+  // };
 
   // note this does need arrow function because it's being passed as a prop and relies on a button click in the DOM
   purchaseHandler = () => {
@@ -103,8 +103,8 @@ class BurgerBuilder extends Component {
     this.props.history.push({
       pathname: '/checkout',
       state: {
-        ingredients: this.state.ingredients,
-        totalPrice: this.state.totalPrice,
+        ingredients: this.props.ings,
+        totalPrice: this.props.price,
       },
     });
   };
@@ -148,7 +148,7 @@ class BurgerBuilder extends Component {
             ingredientAdded={this.props.onIngredientAdded}
             ingredientRemoved={this.props.onIngredientRemoved}
             disabledInfo={disabledInfo}
-            price={this.state.totalPrice}
+            price={this.props.price}
             disabled={!this.state.purchasable}
             ordered={this.purchaseHandler}
           />
@@ -160,7 +160,7 @@ class BurgerBuilder extends Component {
           ingredients={this.props.ings}
           cancelled={this.purchaseCancelHandler}
           continued={this.purchaseContinueHandler}
-          totalPrice={this.state.totalPrice}
+          totalPrice={this.props.price}
         />
       );
     }
@@ -186,6 +186,7 @@ class BurgerBuilder extends Component {
 const mapStateToProps = (state) => {
   return {
     ings: state.ingredients,
+    price: state.totalPrice,
   };
 };
 
@@ -193,7 +194,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingName) =>
       dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName: ingName }),
-    onIngredientRemove: (ingName) =>
+    onIngredientRemoved: (ingName) =>
       dispatch({
         type: actionTypes.REMOVE_INGREDIENT,
         ingredientName: ingName,
