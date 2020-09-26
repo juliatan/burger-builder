@@ -4,11 +4,16 @@ import classes from './Input.module.css';
 const input = (props) => {
   let inputElement;
 
+  const classesArray = [classes.InputElement];
+  if (props.invalid && props.shouldValidate && props.touched) {
+    classesArray.push(classes.Invalid);
+  }
+
   switch (props.elementType) {
     case 'input':
       inputElement = (
         <input
-          className={classes.InputElement}
+          className={classesArray.join(' ')}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...props.elementConfig}
           value={props.value}
@@ -19,7 +24,7 @@ const input = (props) => {
     case 'select':
       inputElement = (
         <select
-          className={classes.InputElement}
+          className={classesArray.join(' ')}
           value={props.value}
           onChange={props.changed}
         >
@@ -34,7 +39,7 @@ const input = (props) => {
     case 'textarea':
       inputElement = (
         <textarea
-          className={classes.InputElement}
+          className={classesArray.join(' ')}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...props.elementConfig}
           value={props.value}
@@ -45,7 +50,7 @@ const input = (props) => {
     default:
       inputElement = (
         <input
-          className={classes.InputElement}
+          className={classesArray.join(' ')}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...props.elementConfig}
           value={props.value}
