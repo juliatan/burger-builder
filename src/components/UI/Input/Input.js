@@ -3,10 +3,14 @@ import classes from './Input.module.css';
 
 const input = (props) => {
   let inputElement;
+  let validationError;
 
   const classesArray = [classes.InputElement];
   if (props.invalid && props.shouldValidate && props.touched) {
     classesArray.push(classes.Invalid);
+    validationError = (
+      <p className={classes.ValidationError}>Please enter a valid value!</p>
+    );
   }
 
   switch (props.elementType) {
@@ -64,6 +68,7 @@ const input = (props) => {
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label className={classes.Label}>{props.label}</label>
       {inputElement}
+      {validationError}
     </div>
   );
 };
