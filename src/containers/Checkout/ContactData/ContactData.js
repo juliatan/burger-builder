@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 import React, { Component } from 'react';
 import axios from '../../../axios-orders';
 import Button from '../../../components/UI/Button/Button';
@@ -63,23 +65,23 @@ class ContactData extends Component {
   };
 
   orderHandler = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // stops the redirect
 
     this.setState({ loading: true });
+    const formData = {};
+    // eslint-disable-next-line guard-for-in
+    // eslint-disable-next-line prefer-const
+    for (let formElementIdentifier in this.state.orderForm) {
+      formData[formElementIdentifier] = this.state.orderForm[
+        formElementIdentifier
+      ].value;
+    }
+
     const post = {
-      customer: {
-        address: {
-          street: '123 street',
-          city: 'London',
-          country: 'UK',
-        },
-        email: 'test@test.com',
-        name: 'Julia Gulia',
-      },
-      deliveryMethod: 'fastest',
       // ingrdients and totalPrice props come from checkout.js Route render
       ingredients: this.props.ingredients,
       totalPrice: this.props.totalPrice, // in real app, would double check calc on server side
+      orderData: formData,
     };
     try {
       const saveOrder = async () => {
@@ -99,9 +101,31 @@ class ContactData extends Component {
     }
   };
 
+  inputChangedHandler = (event, inputIdentifier) => {
+    // in order to change the state in a safe way, we should create a DEEP copy of the state object
+    // Spread operator copy only copies on a single level. Need to repeat for nested objects.
+    // Never mutate this.state directly as called setState() afterwards may replace the mutation made.
+    // Always treat this.state as immutable.
+
+    const updatedOrderForm = {
+      // eslint-disable-next-line react/no-access-state-in-setstate
+      ...this.state.orderForm,
+    };
+
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier],
+    };
+
+    updatedFormElement.value = event.target.value;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+    this.setState({ orderForm: updatedOrderForm });
+  };
+
   render() {
     const formElementsArray = [];
-    for (const key in this.state.orderForm) {
+    // eslint-disable-next-line guard-for-in
+    // eslint-disable-next-line prefer-const
+    for (let key in this.state.orderForm) {
       formElementsArray.push({
         id: key,
         config: this.state.orderForm[key],
@@ -109,19 +133,18 @@ class ContactData extends Component {
     }
 
     let form = (
-      <form>
+      <form onSubmit={this.orderHandler}>
         {formElementsArray.map((element) => (
           <Input
             key={element.id}
             elementType={element.config.elementType}
             elementConfig={element.config.elementConfig}
             value={element.config.value}
+            changed={(event) => this.inputChangedHandler(event, element.id)}
           />
         ))}
 
-        <Button buttonType="Success" clicked={this.orderHandler}>
-          Order
-        </Button>
+        <Button buttonType="Success">Order</Button>
       </form>
     );
     if (this.state.loading) {
