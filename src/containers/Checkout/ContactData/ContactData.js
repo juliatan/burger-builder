@@ -1,5 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
 import React, { Component } from 'react';
 import axios from '../../../axios-orders';
 import Button from '../../../components/UI/Button/Button';
@@ -86,9 +84,11 @@ class ContactData extends Component {
           ],
         },
         value: '',
+        valid: true, // needed to ensure formIsValid properly updated below
       },
     },
     loading: false,
+    formIsValid: false,
   };
 
   orderHandler = (event) => {
@@ -96,13 +96,12 @@ class ContactData extends Component {
 
     this.setState({ loading: true });
     const formData = {};
-    // eslint-disable-next-line guard-for-in
-    // eslint-disable-next-line prefer-const
-    for (let formElementIdentifier in this.state.orderForm) {
+
+    Object.keys(this.state.orderForm).forEach((formElementIdentifier) => {
       formData[formElementIdentifier] = this.state.orderForm[
         formElementIdentifier
       ].value;
-    }
+    });
 
     const post = {
       // ingrdients and totalPrice props come from checkout.js Route render
@@ -110,6 +109,7 @@ class ContactData extends Component {
       totalPrice: this.props.totalPrice, // in real app, would double check calc on server side
       orderData: formData,
     };
+
     try {
       const saveOrder = async () => {
         await axios.post('/orders.json', post);
@@ -151,8 +151,18 @@ class ContactData extends Component {
     updatedFormElement.valid = isValid;
     updatedOrderForm[inputIdentifier] = updatedFormElement;
     updatedFormElement.touched = true;
-    console.log(updatedFormElement);
-    this.setState({ orderForm: updatedOrderForm });
+
+    let formIsValid = true;
+    Object.keys(updatedOrderForm).forEach((key) => {
+      // add && formIsValid to ensure all previous checks are also taken into account
+      formIsValid = updatedOrderForm[key].valid && formIsValid;
+    });
+    // alternatively: old syntax..
+    // for (let inputIdent in updatedOrderForm) {
+    //   formIsValid = updatedOrderForm[inputIdent].valid && formIsValid;
+    // }
+
+    this.setState({ orderForm: updatedOrderForm, formIsValid });
   };
 
   checkValidity = (value, rules) => {
@@ -174,14 +184,13 @@ class ContactData extends Component {
 
   render() {
     const formElementsArray = [];
-    // eslint-disable-next-line guard-for-in
-    // eslint-disable-next-line prefer-const
-    for (let key in this.state.orderForm) {
+
+    Object.keys(this.state.orderForm).forEach((key) => {
       formElementsArray.push({
         id: key,
         config: this.state.orderForm[key],
       });
-    }
+    });
 
     let form = (
       <form onSubmit={this.orderHandler}>
@@ -198,7 +207,9 @@ class ContactData extends Component {
           />
         ))}
 
-        <Button buttonType="Success">Order</Button>
+        <Button buttonType="Success" disabled={!this.state.formIsValid}>
+          Order
+        </Button>
       </form>
     );
     if (this.state.loading) {
