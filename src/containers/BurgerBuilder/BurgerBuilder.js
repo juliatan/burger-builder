@@ -100,14 +100,14 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    // this.props.history.push('/checkout');
-    this.props.history.push({
-      pathname: '/checkout',
-      state: {
-        ingredients: this.props.ings,
-        totalPrice: this.props.price,
-      },
-    });
+    this.props.history.push('/checkout');
+    // this.props.history.push({
+    //   pathname: '/checkout',
+    //   state: {
+    //     ingredients: this.props.ings,
+    //     totalPrice: this.props.price,
+    //   },
+    // });
   };
 
   // note this doesn't need arrow function as it's not being called in the DOM

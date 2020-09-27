@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from '../../../axios-orders';
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
@@ -106,8 +107,8 @@ class ContactData extends Component {
 
     const post = {
       // ingrdients and totalPrice props come from checkout.js Route render
-      ingredients: this.props.ingredients,
-      totalPrice: this.props.totalPrice, // in real app, would double check calc on server side
+      ingredients: this.props.ings,
+      totalPrice: this.props.price, // in real app, would double check calc on server side
       orderData: formData,
     };
 
@@ -226,4 +227,11 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+const mapStateToProps = (state) => {
+  return {
+    ings: state.ingredients,
+    price: state.totalPrice,
+  };
+};
+
+export default connect(mapStateToProps)(ContactData);
