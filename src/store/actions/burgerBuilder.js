@@ -20,24 +20,25 @@ export const removeIngredient = (name) => {
 const setIngredients = (ingredients) => {
   return {
     type: actionTypes.SET_INGREDIENTS,
+    // eslint-disable-next-line object-shorthand
     ingredients: ingredients,
-  }
-}
+  };
+};
 
 const fetchIngredientsFailed = () => {
   return {
     type: actionTypes.FETCH_INGREDIENTS_FAILED,
-  }
-}
+  };
+};
 
 // Async functions below - requires redux-thunk
 export const initIngredients = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       const response = await axios.get('/ingredients.json');
       dispatch(setIngredients(response.data));
     } catch (error) {
       dispatch(fetchIngredientsFailed());
     }
-  }
-}
+  };
+};

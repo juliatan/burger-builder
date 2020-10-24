@@ -10,88 +10,14 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
 import * as burgerBuilderActions from '../../store/actions/index';
 
-// const INGREDIENT_PRICES = {
-//   salad: 0.5,
-//   bacon: 1.0,
-//   cheese: 0.4,
-//   meat: 1.2,
-// };
-
 class BurgerBuilder extends Component {
   state = {
-    // ingredients: null,
-    // totalPrice: 4,
-    // purchasable: false,
-    // left with just the states that are for UI purposes only
     purchasing: false,
-    // loading: false,
-    // error: false,
-    // move error handing to redux since it depends on async call to Firebase
   };
 
-  // This lifecycle hook is the best one for doing API calls. It renders after child components have been rendered.
-  // Update in state will result in a rerender, so in the meantime,
-  // we need to have loading state when this.state.ingredients === null
   componentDidMount() {
-    // this.fetchIngredients();
     this.props.onInitIngredients();
   }
-
-  // move to burgerBuilder actions
-  // fetchIngredients = async () => {
-  //   try {
-  //     const response = await axios.get('/ingredients.json');
-  //     this.setState({ ingredients: response.data });
-  //   } catch (error) {
-  //     this.setState({ error: true });
-  //   }
-  // };
-
-  // addIngredientHandler = (type) => {
-  //   const oldCount = this.state.ingredients[type];
-  //   const updatedCount = oldCount + 1;
-  //   const updatedIngredients = {
-  //     // eslint-disable-next-line react/no-access-state-in-setstate
-  //     ...this.state.ingredients,
-  //   };
-  //   updatedIngredients[type] = updatedCount;
-
-  //   const priceAddition = INGREDIENT_PRICES[type];
-  //   const oldPrice = this.state.totalPrice;
-  //   const updatedPrice = oldPrice + priceAddition;
-
-  //   this.setState({
-  //     ingredients: updatedIngredients,
-  //     totalPrice: updatedPrice,
-  //   });
-
-  //   this.updatePurchaseState(updatedIngredients);
-  // };
-
-  // removeIngredientHandler = (type) => {
-  //   const oldCount = this.state.ingredients[type];
-  //   if (oldCount <= 0) {
-  //     return;
-  //   }
-
-  //   const updatedCount = oldCount - 1;
-  //   const updatedIngredients = {
-  //     // eslint-disable-next-line react/no-access-state-in-setstate
-  //     ...this.state.ingredients,
-  //   };
-  //   updatedIngredients[type] = updatedCount;
-
-  //   const priceDeduction = INGREDIENT_PRICES[type];
-  //   const oldPrice = this.state.totalPrice;
-  //   const updatedPrice = oldPrice - priceDeduction;
-
-  //   this.setState({
-  //     ingredients: updatedIngredients,
-  //     totalPrice: updatedPrice,
-  //   });
-
-  //   this.updatePurchaseState(updatedIngredients);
-  // };
 
   // note this does need arrow function because it's being passed as a prop and relies on a button click in the DOM
   purchaseHandler = () => {
@@ -104,13 +30,6 @@ class BurgerBuilder extends Component {
 
   purchaseContinueHandler = () => {
     this.props.history.push('/checkout');
-    // this.props.history.push({
-    //   pathname: '/checkout',
-    //   state: {
-    //     ingredients: this.props.ings,
-    //     totalPrice: this.props.price,
-    //   },
-    // });
   };
 
   // note this doesn't need arrow function as it's not being called in the DOM
@@ -124,15 +43,10 @@ class BurgerBuilder extends Component {
       }, 0);
 
     return total > 0;
-
-    // this.setState({
-    //   purchasable: total > 0,
-    // });
   }
 
   render() {
     const disabledInfo = {
-      // ...this.state.ingredients, -> replace all incidences throughout
       ...this.props.ings,
     };
 
@@ -149,15 +63,11 @@ class BurgerBuilder extends Component {
         <Aux>
           <Burger ingredients={this.props.ings} />
           <BuildControls
-            // ingredientAdded={this.addIngredientHandler}
-            // ingredientRemoved={this.removeIngredientHandler}
             ingredientAdded={this.props.onIngredientAdded}
             ingredientRemoved={this.props.onIngredientRemoved}
             disabledInfo={disabledInfo}
             price={this.props.price}
-            // want to execute the check immedately on every change hence pass in argument
             disabled={!this.updatePurchaseState(this.props.ings)}
-            // disabled={!this.state.purchasable}
             ordered={this.purchaseHandler}
           />
         </Aux>
@@ -172,10 +82,6 @@ class BurgerBuilder extends Component {
         />
       );
     }
-
-    // if (this.state.loading) {
-    //   orderSummary = <Spinner />;
-    // }
 
     return (
       <Aux>
