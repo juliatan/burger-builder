@@ -5,9 +5,9 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import axios from '../../axios-orders';
 import * as burgerBuilderActions from '../../store/actions/index';
 
 // const INGREDIENT_PRICES = {
@@ -24,25 +24,28 @@ class BurgerBuilder extends Component {
     // purchasable: false,
     // left with just the states that are for UI purposes only
     purchasing: false,
-    loading: false,
-    error: false,
+    // loading: false,
+    // error: false,
+    // move error handing to redux since it depends on async call to Firebase
   };
 
   // This lifecycle hook is the best one for doing API calls. It renders after child components have been rendered.
   // Update in state will result in a rerender, so in the meantime,
   // we need to have loading state when this.state.ingredients === null
   componentDidMount() {
-    this.fetchIngredients();
+    // this.fetchIngredients();
+    this.props.onInitIngredients();
   }
 
-  fetchIngredients = async () => {
-    try {
-      const response = await axios.get('/ingredients.json');
-      this.setState({ ingredients: response.data });
-    } catch (error) {
-      this.setState({ error: true });
-    }
-  };
+  // move to burgerBuilder actions
+  // fetchIngredients = async () => {
+  //   try {
+  //     const response = await axios.get('/ingredients.json');
+  //     this.setState({ ingredients: response.data });
+  //   } catch (error) {
+  //     this.setState({ error: true });
+  //   }
+  // };
 
   // addIngredientHandler = (type) => {
   //   const oldCount = this.state.ingredients[type];
@@ -138,7 +141,7 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    let burger = this.state.error ? <p>There was an error</p> : <Spinner />;
+    let burger = this.props.error ? <p>There was an error</p> : <Spinner />;
     let orderSummary = null;
 
     if (this.props.ings) {
@@ -170,9 +173,9 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
+    // if (this.state.loading) {
+    //   orderSummary = <Spinner />;
+    // }
 
     return (
       <Aux>
@@ -192,6 +195,7 @@ const mapStateToProps = (state) => {
   return {
     ings: state.ingredients,
     price: state.totalPrice,
+    error: state.error,
   };
 };
 
@@ -201,6 +205,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(burgerBuilderActions.addIngredient(ingName)),
     onIngredientRemoved: (ingName) =>
       dispatch(burgerBuilderActions.removeIngredient(ingName)),
+    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
   };
 };
 
