@@ -22,6 +22,14 @@ export const purchaseBurgerStart = () => {
   };
 };
 
+// for purpose of redirect upon successful order
+// be very carefully about when to call this because it will affect redirects on consecutive orders if the purchased state has not be cleared early enough because this is called on a component that's rendered too late. e.g. don't put in Checkout, instead put in BurgerBuilder.
+export const purchaseInit = () => {
+  return {
+    type: actionTypes.PURCHASE_INIT,
+  };
+};
+
 // async actions
 export const purchaseBurger = (orderData) => {
   return async (dispatch) => {
