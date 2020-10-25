@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from '../../../axios-orders';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import classes from './ContactData.module.css';
+import * as actions from '../../../store/actions';
 
 class ContactData extends Component {
   state = {
@@ -89,14 +91,14 @@ class ContactData extends Component {
         valid: true, // needed to ensure formIsValid properly updated below
       },
     },
-    loading: false,
+    // loading: false,
     formIsValid: false,
   };
 
   orderHandler = (event) => {
     event.preventDefault(); // stops the redirect
 
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     const formData = {};
 
     Object.keys(this.state.orderForm).forEach((formElementIdentifier) => {
@@ -105,29 +107,32 @@ class ContactData extends Component {
       ].value;
     });
 
-    const post = {
+    const orderData = {
       // ingrdients and totalPrice props come from checkout.js Route render
       ingredients: this.props.ings,
       totalPrice: this.props.price, // in real app, would double check calc on server side
       orderData: formData,
     };
 
-    try {
-      const saveOrder = async () => {
-        await axios.post('/orders.json', post);
-      };
-      saveOrder();
-      this.setState({
-        loading: false,
-      });
+    this.props.onOrderBurger(orderData);
 
-      // history prop only available because we purposefully passed in the router props in the checkout.js render
-      this.props.history.push('/');
-    } catch (error) {
-      this.setState({
-        loading: false,
-      });
-    }
+    // move to Redux
+    // try {
+    //   const saveOrder = async () => {
+    //     await axios.post('/orders.json', post);
+    //   };
+    //   saveOrder();
+    //   this.setState({
+    //     loading: false,
+    //   });
+
+    //   // history prop only available because we purposefully passed in the router props in the checkout.js render
+    //   this.props.history.push('/');
+    // } catch (error) {
+    //   this.setState({
+    //     loading: false,
+    //   });
+    // }
   };
 
   inputChangedHandler = (event, inputIdentifier) => {
@@ -214,7 +219,8 @@ class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.state.loading) {
+    if (this.props.loading) {
+      // if (this.state.loading) {
       form = <Spinner />;
     }
 
@@ -231,7 +237,19 @@ const mapStateToProps = (state) => {
   return {
     ings: state.ingredients,
     price: state.totalPrice,
+    loading: state.loading,
   };
 };
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onOrderBurger: (orderData) => {
+      dispatch(actions.purchaseBurger(orderData));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withErrorHandler(ContactData, axios));
