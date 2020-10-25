@@ -30,16 +30,56 @@ export const purchaseInit = () => {
   };
 };
 
-// async actions
+// async action
 export const purchaseBurger = (orderData) => {
   return async (dispatch) => {
     dispatch(purchaseBurgerStart());
     try {
       const response = await axios.post('/orders.json', orderData);
-      console.log(response);
       dispatch(purchaseBurgerSuccess(response.data.name, orderData));
     } catch (error) {
       dispatch(purchaseBurgerFail(error));
+    }
+  };
+};
+
+// Fetch existing orders in database
+export const fetchOrdersStart = () => {
+  return {
+    type: actionTypes.FETCH_ORDERS_START,
+  };
+};
+
+export const fetchOrdersSuccess = (orders) => {
+  return {
+    type: actionTypes.FETCH_ORDERS_SUCCESS,
+    orders,
+  };
+};
+
+export const fetchOrdersFail = (error) => {
+  return {
+    type: actionTypes.FETCH_ORDERS_FAIL,
+    error,
+  };
+};
+
+// async action
+export const fetchOrders = () => {
+  return async (dispatch) => {
+    dispatch(fetchOrdersStart());
+    try {
+      const response = await axios.get('/orders.json');
+      const orders = response.data;
+
+      // probably best to do data transformations in actions rather than reducer
+      const fetchedOrders = [];
+      Object.entries(orders).forEach((order) => {
+        fetchedOrders.push({ ...order[1], id: order[0] });
+      });
+      dispatch(fetchOrdersSuccess(fetchedOrders));
+    } catch (error) {
+      dispatch(fetchOrdersFail(error));
     }
   };
 };
