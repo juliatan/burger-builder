@@ -31,11 +31,14 @@ export const purchaseInit = () => {
 };
 
 // async action
-export const purchaseBurger = (orderData) => {
+export const purchaseBurger = (orderData, token) => {
   return async (dispatch) => {
     dispatch(purchaseBurgerStart());
     try {
-      const response = await axios.post('/orders.json', orderData);
+      const response = await axios.post(
+        `/orders.json?auth=${token}`,
+        orderData,
+      );
       dispatch(purchaseBurgerSuccess(response.data.name, orderData));
     } catch (error) {
       dispatch(purchaseBurgerFail(error));
