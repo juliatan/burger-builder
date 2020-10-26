@@ -48,24 +48,8 @@ const reducer = (state = initialState, action) => {
         totalPrice: 4,
         error: false,
       });
-    // return {
-    //   ...state,
-    //   ingredients: {
-    //     // manually create ingredients object so we can set order of ingredients
-    //     salad: action.ingredients.salad,
-    //     bacon: action.ingredients.bacon,
-    //     cheese: action.ingredients.cheese,
-    //     meat: action.ingredients.meat,
-    //   },
-    //   totalPrice: 4,
-    //   error: false,
-    // };
     case actionTypes.FETCH_INGREDIENTS_FAILED:
       return updateObject(state, { error: true });
-    // return {
-    //   ...state,
-    //   error: true,
-    // };
     default:
       return state;
   }
