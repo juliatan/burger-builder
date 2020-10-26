@@ -8,10 +8,11 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (authData) => {
+export const authSuccess = (idToken, userId) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    authData,
+    idToken,
+    userId,
   };
 };
 
@@ -24,6 +25,7 @@ export const authFail = (error) => {
 
 export const auth = (email, password, isSignup) => {
   return async (dispatch) => {
+    dispatch(authStart());
     const API_KEY = 'AIzaSyB1P_vEN4bEeNZdnVMpaIMOFfAS3nUqer4';
     const authData = {
       email,
@@ -36,11 +38,10 @@ export const auth = (email, password, isSignup) => {
       url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
     }
 
-    dispatch(authStart());
     try {
       const response = await axios.post(url, authData);
       console.log(response);
-      dispatch(authSuccess(response.data));
+      dispatch(authSuccess(response.data.idToken, response.data.localId));
     } catch (error) {
       console.log(error);
       dispatch(authFail(error));

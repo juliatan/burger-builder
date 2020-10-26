@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './Auth.module.css';
 import * as actions from '../../store/actions';
 
@@ -41,7 +42,8 @@ class Auth extends Component {
     isSignup: true,
   };
 
-  switchAuthModeHandler = () => {
+  switchAuthModeHandler = (event) => {
+    event.preventDefault(); // stops the redirect
     this.setState((prevState) => {
       return { isSignup: !prevState.isSignup };
     });
@@ -107,7 +109,7 @@ class Auth extends Component {
       });
     });
 
-    const form = (
+    let form = (
       <form>
         {formElementsArray.map((element) => (
           <Input
@@ -131,6 +133,10 @@ class Auth extends Component {
       </form>
     );
 
+    if (this.props.loading) {
+      form = <Spinner />;
+    }
+
     return (
       <div className={classes.Auth}>
         <h4>
@@ -144,6 +150,12 @@ class Auth extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    loading: state.auth.loading,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     onAuth: (email, password, isSignup) =>
@@ -151,4 +163,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
