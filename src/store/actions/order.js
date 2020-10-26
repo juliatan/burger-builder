@@ -65,11 +65,13 @@ export const fetchOrdersFail = (error) => {
 };
 
 // async action
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
   return async (dispatch) => {
     dispatch(fetchOrdersStart());
     try {
-      const response = await axios.get('/orders.json');
+      // note: amended Firebase database rules so need auth token to get Orders
+      // note: instead of passing in token, could also use getState method next to dispatch.
+      const response = await axios.get(`/orders.json?auth=${token}`);
       const orders = response.data;
 
       // probably best to do data transformations in actions rather than reducer
