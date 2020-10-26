@@ -137,6 +137,11 @@ class Auth extends Component {
       form = <Spinner />;
     }
 
+    let errorMessage = null;
+    if (this.props.error) {
+      errorMessage = <p>{this.props.error.message}</p>;
+    }
+
     return (
       <div className={classes.Auth}>
         <h4>
@@ -144,6 +149,7 @@ class Auth extends Component {
             ? 'Sign up for burgers!'
             : 'Login with your existing account'}
         </h4>
+        {errorMessage}
         {form}
       </div>
     );
@@ -153,6 +159,7 @@ class Auth extends Component {
 const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
+    error: state.auth.error,
   };
 };
 
