@@ -1,8 +1,10 @@
+/* eslint-disable react/no-access-state-in-setstate */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
-import axios from '../../axios-orders';
 import classes from './Auth.module.css';
+import * as actions from '../../store/actions';
 
 class Auth extends Component {
   state = {
@@ -36,39 +38,23 @@ class Auth extends Component {
         touched: false,
       },
     },
+    isSignup: true,
   };
 
-  signupHandler = (event) => {
+  switchAuthModeHandler = () => {
+    this.setState((prevState) => {
+      return { isSignup: !prevState.isSignup };
+    });
+  };
+
+  submitHandler = (event) => {
     event.preventDefault(); // stops the redirect
 
-    const formData = {};
-
-    Object.keys(this.state.controls).forEach((formElementIdentifier) => {
-      formData[formElementIdentifier] = this.state.controls[
-        formElementIdentifier
-      ].value;
-    });
-
-    const signupData = {
-      signupData: formData,
-    };
-
-    try {
-      const saveOrder = async () => {
-        await axios.post('/signup.json', signupData);
-      };
-      saveOrder();
-      // this.setState({
-      //   loading: false,
-      // });
-
-      // history prop only available because we purposefully passed in the router props in the checkout.js render
-      // this.props.history.push('/');
-    } catch (error) {
-      // this.setState({
-      //   loading: false,
-      // });
-    }
+    this.props.onAuth(
+      this.state.controls.email.value,
+      this.state.controls.password.value,
+      this.state.isSignup,
+    );
   };
 
   inputChangedHandler = (event, controlName) => {
@@ -122,7 +108,7 @@ class Auth extends Component {
     });
 
     const form = (
-      <form onSubmit={this.signupHandler}>
+      <form>
         {formElementsArray.map((element) => (
           <Input
             key={element.id}
@@ -136,19 +122,33 @@ class Auth extends Component {
           />
         ))}
 
-        <Button buttonType="Success" disabled={!this.state.formIsValid}>
-          Signup
+        <Button buttonType="Danger" clicked={this.switchAuthModeHandler}>
+          Switch to {this.state.isSignup ? 'Sign in' : 'Sign up'}
+        </Button>
+        <Button buttonType="Success" clicked={this.submitHandler}>
+          Submit
         </Button>
       </form>
     );
 
     return (
       <div className={classes.Auth}>
-        <h4>Signup for some burgers!</h4>
+        <h4>
+          {this.state.isSignup
+            ? 'Sign up for burgers!'
+            : 'Login with your existing account'}
+        </h4>
         {form}
       </div>
     );
   }
 }
 
-export default Auth;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAuth: (email, password, isSignup) =>
+      dispatch(actions.auth(email, password, isSignup)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Auth);
