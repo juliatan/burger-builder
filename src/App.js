@@ -33,6 +33,8 @@ class App extends Component {
           <Route path="/logout" component={Logout} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/orders" component={Orders} />
+          {/* Eventhough route is not needed if authenticated, need to add auth route because that's where the authRedirect to checkout logic is located. */}
+          <Route path="/auth" component={Auth} />
           <Route path="/" exact component={BurgerBuilder} />
           <Redirect to="/" />
         </Switch>
