@@ -21,7 +21,13 @@ class BurgerBuilder extends Component {
 
   // note this does need arrow function because it's being passed as a prop and relies on a button click in the DOM
   purchaseHandler = () => {
-    this.setState({ purchasing: true });
+    if (this.props.isAuthenticated) {
+      this.setState({ purchasing: true });
+    } else {
+      // first set the redirect path, then go to auth page
+      this.props.onSetAuthRedirectPath('/checkout');
+      this.props.history.push('/auth');
+    }
   };
 
   purchaseCancelHandler = () => {
@@ -34,6 +40,7 @@ class BurgerBuilder extends Component {
   };
 
   // note this doesn't need arrow function as it's not being called in the DOM
+  // eslint-disable-next-line class-methods-use-this
   updatePurchaseState(ingredients) {
     const total = Object.keys(ingredients)
       .map((ingredientKey) => {
@@ -70,6 +77,7 @@ class BurgerBuilder extends Component {
             price={this.props.price}
             disabled={!this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
+            isAuth={this.props.isAuthenticated}
           />
         </Aux>
       );
@@ -103,6 +111,7 @@ const mapStateToProps = (state) => {
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
     error: state.burgerBuilder.error,
+    isAuthenticated: state.auth.token !== null,
   };
 };
 
@@ -113,6 +122,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.removeIngredient(ingName)),
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onPurchaseInit: () => dispatch(actions.purchaseInit()),
+    onSetAuthRedirectPath: (path) =>
+      dispatch(actions.setAuthRedirectPath(path)),
   };
 };
 
