@@ -7,6 +7,7 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import classes from './ContactData.module.css';
 import * as actions from '../../../store/actions';
+import { checkValidity } from '../../../shared/utility';
 
 class ContactData extends Component {
   state = {
@@ -132,7 +133,7 @@ class ContactData extends Component {
     };
 
     updatedFormElement.value = event.target.value;
-    const isValid = this.checkValidity(
+    const isValid = checkValidity(
       updatedFormElement.value,
       updatedFormElement.validation,
     );
@@ -147,23 +148,6 @@ class ContactData extends Component {
     });
 
     this.setState({ orderForm: updatedOrderForm, formIsValid });
-  };
-
-  checkValidity = (value, rules) => {
-    let isValid = true; // need to also check && isValid to ensure AND not OR check
-    if (rules.required) {
-      isValid = value.trim() !== '' && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    return isValid;
   };
 
   render() {
