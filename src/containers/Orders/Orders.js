@@ -7,37 +7,13 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../store/actions/index';
 
 class Orders extends Component {
-  // state = {
-  //   orders: [],
-  //   loading: true,
-  // };
-
   componentDidMount() {
-    // this.fetchOrders();
     this.props.onFetchOrders(this.props.token, this.props.userId);
   }
 
-  // moved to Redux
-  // fetchOrders = async () => {
-  //   const response = await axios.get('/orders.json');
-  //   const orders = response.data;
-
-  //   const fetchedOrders = [];
-  //   Object.entries(orders).forEach((order) => {
-  //     fetchedOrders.push({ ...order[1], id: order[0] });
-  //   });
-  //   // Alternatively -> for (let key in orders) {
-  //   //   fetchedOrders.push({ ...orders[key], id: key });
-  //   // }
-
-  //   this.setState({ orders: fetchedOrders, loading: false });
-  // };
-
   render() {
     let ordersArray = this.props.loading ? <Spinner /> : null;
-    // let ordersArray = this.state.loading ? <Spinner /> : null;
     if (this.props.orders) {
-      // if (this.state.orders) {
       ordersArray = this.props.orders.map((order) => (
         <Order
           ingredients={order.ingredients}

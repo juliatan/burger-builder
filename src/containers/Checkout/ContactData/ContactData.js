@@ -91,14 +91,12 @@ class ContactData extends Component {
         valid: true, // needed to ensure formIsValid properly updated below
       },
     },
-    // loading: false,
     formIsValid: false,
   };
 
   orderHandler = (event) => {
     event.preventDefault(); // stops the redirect
 
-    // this.setState({ loading: true });
     const formData = {};
 
     Object.keys(this.state.orderForm).forEach((formElementIdentifier) => {
@@ -116,24 +114,6 @@ class ContactData extends Component {
     };
 
     this.props.onOrderBurger(orderData, this.props.token);
-
-    // move to Redux
-    // try {
-    //   const saveOrder = async () => {
-    //     await axios.post('/orders.json', post);
-    //   };
-    //   saveOrder();
-    //   this.setState({
-    //     loading: false,
-    //   });
-
-    //   // history prop only available because we purposefully passed in the router props in the checkout.js render
-    //   this.props.history.push('/');
-    // } catch (error) {
-    //   this.setState({
-    //     loading: false,
-    //   });
-    // }
   };
 
   inputChangedHandler = (event, inputIdentifier) => {
@@ -165,10 +145,6 @@ class ContactData extends Component {
       // add && formIsValid to ensure all previous checks are also taken into account
       formIsValid = updatedOrderForm[key].valid && formIsValid;
     });
-    // alternatively: old syntax..
-    // for (let inputIdent in updatedOrderForm) {
-    //   formIsValid = updatedOrderForm[inputIdent].valid && formIsValid;
-    // }
 
     this.setState({ orderForm: updatedOrderForm, formIsValid });
   };
@@ -221,7 +197,6 @@ class ContactData extends Component {
       </form>
     );
     if (this.props.loading) {
-      // if (this.state.loading) {
       form = <Spinner />;
     }
 
