@@ -5,17 +5,6 @@ import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSumm
 import ContactData from './ContactData/ContactData';
 
 class Checkout extends Component {
-  // state = {
-  //   ingredients: {},
-  //   totalPrice: 0,
-  // };
-
-  // componentDidMount() {
-  //   // comes via BurgerBuilder where pushed route comes with a state object I setup
-  //   const { ingredients, totalPrice } = this.props.location.state;
-  //   this.setState({ ingredients, totalPrice });
-  // }
-
   checkoutCancelledHandler = () => {
     this.props.history.goBack();
   };
@@ -42,14 +31,6 @@ class Checkout extends Component {
             // eslint-disable-next-line prefer-template
             path={this.props.match.path + '/contact-data'}
             component={ContactData}
-            // replaced with render to pass in our own props, and the router props
-            // render={(props) => (
-            //   <ContactData
-            //     ingredients={this.props.ings}
-            //     totalPrice={this.props.price}
-            //     {...props}
-            //   />
-            // )}
           />
         </div>
       );
