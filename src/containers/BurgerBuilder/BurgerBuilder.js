@@ -10,7 +10,8 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
 import * as actions from '../../store/actions/index';
 
-class BurgerBuilder extends Component {
+// Add export for testing purposes as we want to strip out Redux(connect)
+export class BurgerBuilder extends Component {
   state = {
     purchasing: false,
   };
